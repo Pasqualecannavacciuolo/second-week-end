@@ -218,4 +218,52 @@ public class DBOperations {
             }
         }
     }
+
+    public boolean richiestaPrenotazione(String cognome, String data, int numeroPersone, String cellulare) throws SQLException, IOException {
+        // Checking if a table can hold the number of person of this preservation
+        String _numeroTavolo = disponibilitàTavolo(numeroPersone);
+        Connection conn = null;
+        ReadProperties readProperties = new ReadProperties();
+        readProperties.read("queries.properties");
+        if(_numeroTavolo != null) {
+            try {
+                conn = pool.getConnection();
+                try (PreparedStatement ps = conn.prepareStatement(readProperties.properties.getProperty("db.insert.prenotazione"))) {
+                    ps.setString(1, cognome);
+                    ps.setString(2, data);
+                    ps.setInt(3, numeroPersone);
+                    ps.setString(4, cellulare);
+                    ps.setInt(5, Integer.parseInt(_numeroTavolo));
+                    ps.executeUpdate();
+                }
+            } finally {
+                if (conn != null) {
+                    pool.returnConnection(conn);
+                }
+            }
+        }
+        return false;
+    }
+
+    // Helper method to get the numberTable of a table that can hold the capacity of people of the preservation
+    public String disponibilitàTavolo(int numeroPersone) throws SQLException {
+        String query = "SELECT Numero FROM `Ristorante`.`Tavolo` WHERE Capienza >=" + numeroPersone + ";";
+        Connection conn = null;
+        String numeroTavolo = null;
+        try {
+            conn = pool.getConnection();
+
+            try (Statement statement = conn.createStatement()) {
+                ResultSet res = statement.executeQuery(query);
+                while (res.next()) {
+                    numeroTavolo = res.getString(1);
+                }
+            }
+        } finally {
+            if (conn != null) {
+                pool.returnConnection(conn);
+            }
+        }
+    return numeroTavolo;
+    }
 }

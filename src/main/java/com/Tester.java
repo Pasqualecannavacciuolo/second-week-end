@@ -14,15 +14,16 @@ public class Tester {
         db.readConnectionData();
 
         int s = 0;
-        while(s!=6) {
+        while(s!=7) {
             System.out.println("Cosa vuoi fare?: ");
             System.out.println("+--------+-----+");
-            System.out.println("| CREATE |  1  |");
-            System.out.println("| INSERT |  2  |");
-            System.out.println("| SELECT |  3  |");
+            System.out.println("| CREATE |  1  |"); // Fatto
+            System.out.println("| INSERT |  2  |"); // Fatto
+            System.out.println("| SELECT |  3  |"); // Fatto
             System.out.println("| UPDATE |  4  |");
             System.out.println("| DELETE |  5  |");
-            System.out.println("|  EXIT  |  6  |");
+            System.out.println("| CHECK  |  6  |");// Fatto
+            System.out.println("|  EXIT  |  7  |"); // Fatto
             System.out.println("+--------+-----+");
             System.out.print("\nScelta: ");
             s = input.nextInt();
@@ -43,7 +44,11 @@ public class Tester {
                     db.deletePrenotazione();
                     break;
                 }
-                case 6: {
+                case 6 : {
+                    db.richiestaPrenotazione("Cannavacciuolo", "25/12/2022", 3, "3428825696");
+                    break;
+                }
+                case 7: {
                     System.exit(0);
                 }
             }
