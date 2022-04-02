@@ -33,12 +33,15 @@ public class DBOperations {
         pool = new StackCP(databaseUrl, userName, password, maxPoolSize);
     }
 
+    // This submenu let you choose which query to execute
     public String chooseQuery() throws IOException {
         int scelta;
         String query=null;
         readProperties.read("queries.properties");
-        System.out.println("|CREA TABELLA PRENOTAZIONE |  1  |");
-        System.out.println("|   CREA TABELLA ORDINI    |  2  |");
+        System.out.println("+---------------------------+-----+");
+        System.out.println("| CREA TABELLA PRENOTAZIONE |  1  |");
+        System.out.println("|   CREA TABELLA ORDINI     |  2  |");
+        System.out.println("+---------------------------+-----+");
         scelta = input.nextInt();
         switch (scelta) {
             case 1: query = readProperties.properties.getProperty("db.create.prenotazione");break;
@@ -47,6 +50,7 @@ public class DBOperations {
         return query;
     }
 
+    // Used for SELECT because prints data
     public void tryExecute(String query) throws SQLException {
         Connection conn = null;
         try {
@@ -66,6 +70,7 @@ public class DBOperations {
         }
     }
 
+    // Used for INSERT - UPDATE - DELETE
     public void tryExecuteUpdate(String query) throws SQLException{
         Connection conn = null;
         try {

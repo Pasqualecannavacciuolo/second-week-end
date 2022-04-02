@@ -1,8 +1,6 @@
 package com;
 
-import com.connection.StackCP;
 import com.dboperations.DBOperations;
-import utility.ReadProperties;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -18,14 +16,14 @@ public class Tester {
         int s = 0;
         while(s!=6) {
             System.out.println("Cosa vuoi fare?: ");
-            System.out.println("|------- |-----|");
+            System.out.println("+--------+-----+");
             System.out.println("| CREATE |  1  |");
             System.out.println("| INSERT |  2  |");
             System.out.println("| SELECT |  3  |");
             System.out.println("| UPDATE |  4  |");
             System.out.println("| DELETE |  5  |");
             System.out.println("|  EXIT  |  6  |");
-            System.out.println("|------- |-----|");
+            System.out.println("+--------+-----+");
             System.out.print("\nScelta: ");
             s = input.nextInt();
             switch (s) {
