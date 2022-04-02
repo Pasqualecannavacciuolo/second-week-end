@@ -191,4 +191,30 @@ public class DBOperations {
             }
         }
     }
+
+    // This method delete a reservation and automatically deletes the reserved table
+    public void deletePrenotazione() throws SQLException, IOException {
+        Connection conn = null;
+        readProperties.read("queries.properties");
+        String query = readProperties.properties.getProperty("db.delete.prenotazione");
+
+        String cognome, data;
+        System.out.print("\nCognome da cancellare: ");
+        cognome=input.next();
+        System.out.print("\nData: ");
+        data=input.next();
+
+        try {
+            conn = pool.getConnection();
+            try (PreparedStatement ps = conn.prepareStatement(query)) {
+                ps.setString(1, cognome);
+                ps.setString(2, data);
+                ps.executeUpdate();
+            }
+        } finally {
+            if (conn != null) {
+                pool.returnConnection(conn);
+            }
+        }
+    }
 }

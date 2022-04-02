@@ -37,6 +37,11 @@ public class Tester {
                     db.insertPrenotazione(query);
                     String query2 = db.chooseQuery();
                     db.insertTavolo(query2);
+                    break;
+                }
+                case 5 : {
+                    db.deletePrenotazione();
+                    break;
                 }
                 case 6: {
                     System.exit(0);
