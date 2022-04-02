@@ -3,6 +3,7 @@ package com.dboperations;
 import com.Prenotazione;
 import com.Tavolo;
 import com.connection.StackCP;
+import utility.LOG;
 import utility.ReadProperties;
 
 import java.io.IOException;
@@ -11,7 +12,7 @@ import java.util.Scanner;
 
 public class DBOperations {
     Scanner input = new Scanner(System.in);
-
+    LOG L = LOG.getInstance();
     // Reading the connection parameters from file
     ReadProperties readProperties = new ReadProperties();
 
@@ -118,7 +119,7 @@ public class DBOperations {
     }
 
     // Helper method to get from INPUT the data for a reservation
-    private Tavolo seTavolo() {
+    private Tavolo setTavolo() {
         int numero, capienza;
 
         // Getting the data
@@ -176,7 +177,7 @@ public class DBOperations {
 
         for(int i=0; i<n; i++) {
             // Calling the helper method
-            Tavolo t = seTavolo();
+            Tavolo t = setTavolo();
             try {
                 conn = pool.getConnection();
                 try (PreparedStatement ps = conn.prepareStatement(query)) {
