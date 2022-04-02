@@ -32,6 +32,12 @@ public class Tester {
                     db.tryExecuteUpdate(query);
                     break;
                 }
+                case 2: {
+                    String query = db.chooseQuery();
+                    db.insertPrenotazione(query);
+                    String query2 = db.chooseQuery();
+                    db.insertTavolo(query2);
+                }
                 case 6: {
                     System.exit(0);
                 }
