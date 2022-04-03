@@ -3,16 +3,18 @@ package com.dboperations;
 import com.Prenotazione;
 import com.Tavolo;
 import com.connection.StackCP;
-import utility.LOG;
 import utility.ReadProperties;
 
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.*;
 import java.util.Scanner;
 
 public class DBOperations {
     Scanner input = new Scanner(System.in);
-    LOG L = LOG.getInstance();
+
     // Reading the connection parameters from file
     ReadProperties readProperties = new ReadProperties();
 
@@ -269,5 +271,46 @@ public class DBOperations {
             }
         }
         return numeroTavolo;
+    }
+
+    public void scriviPrenotazioniSuFile() throws IOException, SQLException{
+        String query = "SELECT * FROM Prenotazione";
+        Connection conn = null;
+
+        String cognome, data, numeroPersone, cellulare;
+        int numeroTavolo;
+
+        try {
+            PrintWriter outputStream = new PrintWriter("prenotazioni.txt");
+            outputStream.println(String.format("%-20s %-20s %-20s %-20s %-20s", "COGNOME", "DATA", "NUMERO PERSONE", "CELLULARE", "NUMERO TAVOLO"));
+
+
+            try {
+                conn = pool.getConnection();
+
+                try (Statement statement = conn.createStatement()) {
+                    ResultSet res = statement.executeQuery(query);
+                    while (res.next()) {
+                        cognome = res.getString(1);
+                        data = res.getString(2);
+                        numeroPersone = res.getString(3);
+                        cellulare = res.getString(4);
+                        numeroTavolo = res.getInt(5);
+                        outputStream.println(String.format("%-20s %-20s %-20s %-20s %-20s", cognome, data, numeroPersone, cellulare, numeroTavolo));
+                    }
+                }
+            } finally {
+                if (conn != null) {
+                    pool.returnConnection(conn);
+                }
+            }
+
+
+            outputStream.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

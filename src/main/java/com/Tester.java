@@ -1,5 +1,6 @@
 package com;
 
+import com.connection.StackCP;
 import com.dboperations.DBOperations;
 
 import java.io.IOException;
@@ -11,20 +12,21 @@ public class Tester {
         Scanner input = new Scanner(System.in);
         DBOperations db = new DBOperations();
 
+        // Reading the connection data
         db.readConnectionData();
 
         int s = 0;
         while(s!=7) {
             System.out.println("Cosa vuoi fare?: ");
-            System.out.println("+---------------------+-----+");
-            System.out.println("| CREATE              |  1  |"); // Fatto
-            System.out.println("| INSERT PRENOTAZIONE |  2  |"); // Fatto
-            System.out.println("| INSERT TAVOLO       |  3  |"); // Fatto
-            System.out.println("| SELECT              |  4  |"); // Fatto
-            System.out.println("| DELETE              |  5  |");
-            System.out.println("| CHECK               |  6  |");// Fatto
-            System.out.println("| EXIT                |  7  |"); // Fatto
-            System.out.println("+---------------------+-----+");
+            System.out.println("+------------------------+-----+");
+            System.out.println("| CREATE                 |  1  |");
+            System.out.println("| INSERT PRENOTAZIONE    |  2  |");
+            System.out.println("| INSERT TAVOLO          |  3  |");
+            System.out.println("| EXPORT PRENOTAZIONI    |  4  |");
+            System.out.println("| DELETE                 |  5  |");
+            System.out.println("| RICHIESTA PRENOTAZIONE |  6  |");
+            System.out.println("| EXIT                   |  7  |");
+            System.out.println("+------------------------+-----+");
             System.out.print("\nScelta: ");
             s = input.nextInt();
             switch (s) {
@@ -39,6 +41,10 @@ public class Tester {
                 }
                 case 3: {
                     db.insertTavolo();
+                    break;
+                }
+                case 4: {
+                    db.scriviPrenotazioniSuFile();
                     break;
                 }
                 case 5 : {
