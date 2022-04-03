@@ -16,28 +16,29 @@ public class Tester {
         int s = 0;
         while(s!=7) {
             System.out.println("Cosa vuoi fare?: ");
-            System.out.println("+--------+-----+");
-            System.out.println("| CREATE |  1  |"); // Fatto
-            System.out.println("| INSERT |  2  |"); // Fatto
-            System.out.println("| SELECT |  3  |"); // Fatto
-            System.out.println("| UPDATE |  4  |");
-            System.out.println("| DELETE |  5  |");
-            System.out.println("| CHECK  |  6  |");// Fatto
-            System.out.println("|  EXIT  |  7  |"); // Fatto
-            System.out.println("+--------+-----+");
+            System.out.println("+---------------------+-----+");
+            System.out.println("| CREATE              |  1  |"); // Fatto
+            System.out.println("| INSERT PRENOTAZIONE |  2  |"); // Fatto
+            System.out.println("| INSERT TAVOLO       |  3  |"); // Fatto
+            System.out.println("| SELECT              |  4  |"); // Fatto
+            System.out.println("| DELETE              |  5  |");
+            System.out.println("| CHECK               |  6  |");// Fatto
+            System.out.println("| EXIT                |  7  |"); // Fatto
+            System.out.println("+---------------------+-----+");
             System.out.print("\nScelta: ");
             s = input.nextInt();
             switch (s) {
                 case 1: {
                     String query = db.chooseQuery();
-                    db.tryExecuteUpdate(query);
+                    db.createTables(query);
                     break;
                 }
                 case 2: {
-                    String query = db.chooseQuery();
-                    db.insertPrenotazione(query);
-                    String query2 = db.chooseQuery();
-                    db.insertTavolo(query2);
+                    db.insertPrenotazione();
+                    break;
+                }
+                case 3: {
+                    db.insertTavolo();
                     break;
                 }
                 case 5 : {
@@ -45,7 +46,8 @@ public class Tester {
                     break;
                 }
                 case 6 : {
-                    db.richiestaPrenotazione("Cannavacciuolo", "25/12/2022", 3, "3428825696");
+                    Prenotazione p = db.setPrenotazione();
+                    db.richiestaPrenotazione(p.getCognome(), p.getData(), p.getNumeroPersone(), p.getCellulare());
                     break;
                 }
                 case 7: {

@@ -33,10 +33,12 @@ public class DBOperations {
         pool = new StackCP(databaseUrl, userName, password, maxPoolSize);
     }
 
-    // This submenu let you choose which query to execute
+
+
+    // This submenu let you choose which CREATE OPERATION to execute
     public String chooseQuery() throws IOException {
         int scelta;
-        String query=null;
+        String query = null;
         readProperties.read("queries.properties");
         System.out.println("+---------------------------+-----+");
         System.out.println("| CREA TABELLA PRENOTAZIONE |  1  |");
@@ -46,36 +48,18 @@ public class DBOperations {
         System.out.println("+---------------------------+-----+");
         scelta = input.nextInt();
         switch (scelta) {
-            case 1: query = readProperties.properties.getProperty("db.create.prenotazione");break;
-            case 2: query = readProperties.properties.getProperty("db.create.tavolo");break;
-            case 3: query = readProperties.properties.getProperty("db.insert.prenotazione");break;
-            case 4: query = readProperties.properties.getProperty("db.insert.tavolo");break;
+            case 1:
+                query = readProperties.properties.getProperty("db.create.prenotazione");
+                break;
+            case 2:
+                query = readProperties.properties.getProperty("db.create.tavolo");
+                break;
         }
         return query;
     }
 
-    // Used for SELECT because prints data
-    public void tryExecute(String query) throws SQLException {
-        Connection conn = null;
-        try {
-            conn = pool.getConnection();
-
-            try (Statement statement = conn.createStatement()) {
-                ResultSet res = statement.executeQuery(query);
-                while (res.next()) {
-                    String tblName = res.getString(1);
-                    System.out.println(tblName);
-                }
-            }
-        } finally {
-            if (conn != null) {
-                pool.returnConnection(conn);
-            }
-        }
-    }
-
     // Used for CREATE
-    public void tryExecuteUpdate(String query) throws SQLException{
+    public void createTables(String query) throws SQLException {
         Connection conn = null;
         try {
             conn = pool.getConnection();
@@ -90,22 +74,22 @@ public class DBOperations {
         }
     }
 
+
+
     // Helper method to get from INPUT the data for a reservation
-    private Prenotazione setPrenotazione() {
-        String cognome, data,cellulare;
-        int numeroPersone, numeroTavolo;
+    public Prenotazione setPrenotazione() {
+        String cognome, data, cellulare;
+        int numeroPersone;
 
         // Getting the data
         System.out.print("\nInserisci cognome: ");
-        cognome=input.next();
+        cognome = input.next();
         System.out.print("\nInserisci data: ");
-        data=input.next();
+        data = input.next();
         System.out.print("\nInserisci numero persone: ");
-        numeroPersone=input.nextInt();
+        numeroPersone = input.nextInt();
         System.out.print("\nInserisci cellulare: ");
-        cellulare=input.next();
-        System.out.print("\nInserisci numero tavolo: ");
-        numeroTavolo=input.nextInt();
+        cellulare = input.next();
 
         // Building the reservation
         Prenotazione prenotazione = Prenotazione.builder()
@@ -113,7 +97,6 @@ public class DBOperations {
                 .data(data)
                 .numeroPersone(numeroPersone)
                 .cellulare(cellulare)
-                .numeroTavolo(numeroTavolo)
                 .build();
         return prenotazione;
     }
@@ -124,9 +107,9 @@ public class DBOperations {
 
         // Getting the data
         System.out.print("\nInserisci numero tavolo: ");
-        numero=input.nextInt();
+        numero = input.nextInt();
         System.out.print("\nInserisci capienza: ");
-        capienza=input.nextInt();
+        capienza = input.nextInt();
 
         // Building the reservation
         Tavolo tavolo = Tavolo.builder()
@@ -136,46 +119,51 @@ public class DBOperations {
         return tavolo;
     }
 
+
+
     // This method insert data for a preservation
-    public void insertPrenotazione(String query) throws SQLException {
+    public void insertPrenotazione() throws SQLException, IOException {
+        readProperties.read("queries.properties");
+        String query = readProperties.properties.getProperty("db.insert.prenotazione");
 
-            // Getting the num of preservation to insert into the database
-            System.out.print("\nQuante prenotazioni vuoi inserire?: ");
-            int n = input.nextInt();
+        // Getting the num of preservation to insert into the database
+        System.out.print("\nQuante prenotazioni vuoi inserire?: ");
+        int n = input.nextInt();
 
-            Connection conn = null;
+        Connection conn = null;
 
-            for(int i=0; i<n; i++) {
-                // Calling the helper method
-                Prenotazione p = setPrenotazione();
-                try {
-                    conn = pool.getConnection();
-                    try (PreparedStatement ps = conn.prepareStatement(query)) {
-                        ps.setString(1, p.getCognome());
-                        ps.setString(2, p.getData());
-                        ps.setInt(3, p.getNumeroPersone());
-                        ps.setString(4, p.getCellulare());
-                        ps.setInt(5, p.getNumeroTavolo());
-                        ps.executeUpdate();
-                    }
-                } finally {
-                    if (conn != null) {
-                        pool.returnConnection(conn);
-                    }
+        for (int i = 0; i < n; i++) {
+            // Calling the helper method
+            Prenotazione p = setPrenotazione();
+            try {
+                conn = pool.getConnection();
+                try (PreparedStatement ps = conn.prepareStatement(query)) {
+                    ps.setString(1, p.getCognome());
+                    ps.setString(2, p.getData());
+                    ps.setInt(3, p.getNumeroPersone());
+                    ps.setString(4, p.getCellulare());
+                    ps.setInt(5, p.getNumeroTavolo());
+                    ps.executeUpdate();
+                }
+            } finally {
+                if (conn != null) {
+                    pool.returnConnection(conn);
                 }
             }
+        }
     }
 
     // This method insert data for a table reserved
-    public void insertTavolo(String query) throws SQLException {
-
+    public void insertTavolo() throws SQLException, IOException {
+        readProperties.read("queries.properties");
+        String query = readProperties.properties.getProperty("db.insert.tavolo");
         // Getting the num of preservation to insert into the database
         System.out.print("\nQuanti tavoli vuoi inserire?: ");
         int n = input.nextInt();
 
         Connection conn = null;
 
-        for(int i=0; i<n; i++) {
+        for (int i = 0; i < n; i++) {
             // Calling the helper method
             Tavolo t = setTavolo();
             try {
@@ -193,6 +181,8 @@ public class DBOperations {
         }
     }
 
+
+
     // This method delete a reservation and automatically deletes the reserved table
     public void deletePrenotazione() throws SQLException, IOException {
         Connection conn = null;
@@ -201,9 +191,9 @@ public class DBOperations {
 
         String cognome, data;
         System.out.print("\nCognome da cancellare: ");
-        cognome=input.next();
+        cognome = input.next();
         System.out.print("\nData: ");
-        data=input.next();
+        data = input.next();
 
         try {
             conn = pool.getConnection();
@@ -219,13 +209,27 @@ public class DBOperations {
         }
     }
 
+
+
+    /**
+     * This method use the output from the helper method disponibilitàTavolo if the output is not equal to null
+     * then we proceed to insert a new reservation with a table that can hold the number of people of the reservation
+     *
+     * @param cognome
+     * @param data
+     * @param numeroPersone
+     * @param cellulare
+     * @return
+     * @throws SQLException
+     * @throws IOException
+     */
     public boolean richiestaPrenotazione(String cognome, String data, int numeroPersone, String cellulare) throws SQLException, IOException {
         // Checking if a table can hold the number of person of this preservation
         String _numeroTavolo = disponibilitàTavolo(numeroPersone);
         Connection conn = null;
         ReadProperties readProperties = new ReadProperties();
         readProperties.read("queries.properties");
-        if(_numeroTavolo != null) {
+        if (_numeroTavolo != null) {
             try {
                 conn = pool.getConnection();
                 try (PreparedStatement ps = conn.prepareStatement(readProperties.properties.getProperty("db.insert.prenotazione"))) {
@@ -264,6 +268,6 @@ public class DBOperations {
                 pool.returnConnection(conn);
             }
         }
-    return numeroTavolo;
+        return numeroTavolo;
     }
 }
