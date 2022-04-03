@@ -30,8 +30,7 @@ public class Tester {
             s = input.nextInt();
             switch (s) {
                 case 1: {
-                    String query = db.chooseQuery();
-                    db.createTables(query);
+                    db.createTables();
                     break;
                 }
                 case 2: {
