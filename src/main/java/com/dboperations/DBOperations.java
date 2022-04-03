@@ -6,7 +6,6 @@ import com.connection.StackCP;
 import utility.ReadProperties;
 
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
@@ -78,7 +77,7 @@ public class DBOperations {
 
 
 
-    // Helper method to get from INPUT the data for a reservation
+    // Helper method to get data from INPUT for a reservation
     public Prenotazione setPrenotazione() {
         String cognome, data, cellulare;
         int numeroPersone;
@@ -103,7 +102,7 @@ public class DBOperations {
         return prenotazione;
     }
 
-    // Helper method to get from INPUT the data for a reservation
+    // Helper method to get data from INPUT for a table
     private Tavolo setTavolo() {
         int numero, capienza;
 
@@ -123,7 +122,7 @@ public class DBOperations {
 
 
 
-    // This method insert data for a preservation
+    // This method insert data for a reservation
     public void insertPrenotazione() throws SQLException, IOException {
         readProperties.read("queries.properties");
         String query = readProperties.properties.getProperty("db.insert.prenotazione");
@@ -273,6 +272,7 @@ public class DBOperations {
         return numeroTavolo;
     }
 
+    // Method to export all the reservation from the database to a txt file
     public void scriviPrenotazioniSuFile() throws IOException, SQLException{
         String query = "SELECT * FROM Prenotazione";
         Connection conn = null;
