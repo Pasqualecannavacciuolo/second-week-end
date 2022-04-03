@@ -120,40 +120,6 @@ public class DBOperations {
         return tavolo;
     }
 
-
-
-    // This method insert data for a reservation
-    public void insertPrenotazione() throws SQLException, IOException {
-        readProperties.read("queries.properties");
-        String query = readProperties.properties.getProperty("db.insert.prenotazione");
-
-        // Getting the num of preservation to insert into the database
-        System.out.print("\nQuante prenotazioni vuoi inserire?: ");
-        int n = input.nextInt();
-
-        Connection conn = null;
-
-        for (int i = 0; i < n; i++) {
-            // Calling the helper method
-            Prenotazione p = setPrenotazione();
-            try {
-                conn = pool.getConnection();
-                try (PreparedStatement ps = conn.prepareStatement(query)) {
-                    ps.setString(1, p.getCognome());
-                    ps.setString(2, p.getData());
-                    ps.setInt(3, p.getNumeroPersone());
-                    ps.setString(4, p.getCellulare());
-                    ps.setInt(5, p.getNumeroTavolo());
-                    ps.executeUpdate();
-                }
-            } finally {
-                if (conn != null) {
-                    pool.returnConnection(conn);
-                }
-            }
-        }
-    }
-
     // This method insert data for a table reserved
     public void insertTavolo() throws SQLException, IOException {
         readProperties.read("queries.properties");

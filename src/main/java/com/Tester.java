@@ -19,12 +19,11 @@ public class Tester {
         while(s!=7) {
             System.out.println("Cosa vuoi fare?: ");
             System.out.println("+------------------------+-----+");
-            System.out.println("| CREATE                 |  1  |");
-            System.out.println("| INSERT PRENOTAZIONE    |  2  |");
+            System.out.println("| CREATE TABLES          |  1  |");
+            System.out.println("| RICHIESTA PRENOTAZIONE |  2  |");
             System.out.println("| INSERT TAVOLO          |  3  |");
             System.out.println("| EXPORT PRENOTAZIONI    |  4  |");
             System.out.println("| DELETE                 |  5  |");
-            System.out.println("| RICHIESTA PRENOTAZIONE |  6  |");
             System.out.println("| EXIT                   |  7  |");
             System.out.println("+------------------------+-----+");
             System.out.print("\nScelta: ");
@@ -36,7 +35,8 @@ public class Tester {
                     break;
                 }
                 case 2: {
-                    db.insertPrenotazione();
+                    Prenotazione p = db.setPrenotazione();
+                    db.richiestaPrenotazione(p.getCognome(), p.getData(), p.getNumeroPersone(), p.getCellulare());
                     break;
                 }
                 case 3: {
@@ -49,11 +49,6 @@ public class Tester {
                 }
                 case 5 : {
                     db.deletePrenotazione();
-                    break;
-                }
-                case 6 : {
-                    Prenotazione p = db.setPrenotazione();
-                    db.richiestaPrenotazione(p.getCognome(), p.getData(), p.getNumeroPersone(), p.getCellulare());
                     break;
                 }
                 case 7: {
