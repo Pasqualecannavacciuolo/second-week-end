@@ -35,38 +35,18 @@ public class DBOperations {
     }
 
 
-
-    // This submenu let you choose which CREATE OPERATION to execute
-    public String chooseQuery() throws IOException {
-        int scelta;
-        String query = null;
+    // Used for CREATE the 2 tables
+    public void createTables() throws SQLException, IOException {
         readProperties.read("queries.properties");
-        System.out.println("+---------------------------+-----+");
-        System.out.println("| CREA TABELLA PRENOTAZIONE |  1  |");
-        System.out.println("|   CREA TABELLA ORDINI     |  2  |");
-        System.out.println("|   INSERISCI PRENOTAZIONE  |  3  |");
-        System.out.println("|   INSERISCI TAVOLO        |  4  |");
-        System.out.println("+---------------------------+-----+");
-        scelta = input.nextInt();
-        switch (scelta) {
-            case 1:
-                query = readProperties.properties.getProperty("db.create.prenotazione");
-                break;
-            case 2:
-                query = readProperties.properties.getProperty("db.create.tavolo");
-                break;
-        }
-        return query;
-    }
-
-    // Used for CREATE
-    public void createTables(String query) throws SQLException {
+        String createTablePrenotazione = readProperties.properties.getProperty("db.create.prenotazione");
+        String createTableTavolo = readProperties.properties.getProperty("db.create.tavolo");
         Connection conn = null;
         try {
             conn = pool.getConnection();
 
             try (Statement statement = conn.createStatement()) {
-                statement.executeUpdate(query);
+                statement.executeUpdate(createTableTavolo);
+                statement.executeUpdate(createTablePrenotazione);
             }
         } finally {
             if (conn != null) {
